@@ -9,6 +9,20 @@
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
+### API
+
+#### Installations
+
+## supabase
+
+https://supabase.com/docs/guides/cli/getting-started#installing-the-supabase-cli
+
+```bash
+supabase start
+```
+
+Go to http://localhost:54323
+
 ### Utilities
 
 This Turborepo has some additional tools already setup for you:

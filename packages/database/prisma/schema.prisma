@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model to represent application users.
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  name         String?
+  password     String // Consider hashing passwords before storing.
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  sessions     Session[]
+  resumes      Resume[]
+  interactions Interaction[]
+}
+
+// Session model to represent user sessions for authentication.
+model Session {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  token     String   @unique
+}
+
+// Resume model to represent user resumes.
+model Resume {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  content      String // Store the resume content, consider using JSON or similar format.
+  score        Int // Score of the resume.
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  interactions Interaction[]
+}
+
+// Interaction model to represent interactions with OpenAI.
+model Interaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  resumeId  Int?
+  resume    Resume?  @relation(fields: [resumeId], references: [id])
+  question  String // The question asked to the user.
+  answer    String // The answer provided by the user.
+  createdAt DateTime @default(now())
+}
